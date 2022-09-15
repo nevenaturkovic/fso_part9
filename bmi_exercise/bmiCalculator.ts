@@ -55,3 +55,5 @@ try {
 }
 
 // console.log(calculateBmi(171, 54))
+
+export {calculateBmi}
