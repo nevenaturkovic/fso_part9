@@ -1,3 +1,28 @@
+interface ExerciseInput {
+  targetValue: number
+  numberOfHoursPerDay: Array<number>
+}
+
+const parseArgumentsExc = (args: Array<string>): ExerciseInput => {
+  if (args.length < 4) throw new Error("Not enough arguments")
+
+  const targetValue: number = Number(args[2])
+  const numberOfHoursPerDay: Array<number> = args
+    .slice(3)
+    .map((hours) => Number(hours))
+  if (
+    !isNaN(targetValue) &&
+    numberOfHoursPerDay.every((hours) => !isNaN(hours))
+  ) {
+    return {
+      targetValue,
+      numberOfHoursPerDay,
+    }
+  } else {
+    throw new Error("Provided values were not numbers!")
+  }
+}
+
 interface Result {
   periodLength: number
   trainingDays: number
@@ -46,4 +71,15 @@ const calculateExercises = (
   }
 }
 
-console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+// console.log(calculateExercises([3, 0, 2, 4.5, 0, 3, 1], 2))
+
+try {
+  const { targetValue, numberOfHoursPerDay } = parseArgumentsExc(process.argv)
+  console.log(calculateExercises(numberOfHoursPerDay, targetValue))
+} catch (error: unknown) {
+  let errorMessage = "Something bad happened."
+  if (error instanceof Error) {
+    errorMessage += " Error: " + error.message
+  }
+  console.log(errorMessage)
+}
