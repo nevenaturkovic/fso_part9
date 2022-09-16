@@ -8,7 +8,8 @@
     "calculateBmi": "ts-node bmiCalculator.ts",
     "calculateExercises": "ts-node exerciseCalculator.ts",
     "start": "ts-node index.ts",
-    "dev": "ts-node-dev index.ts"
+    "dev": "ts-node-dev index.ts",
+    "lint": "eslint --ext .ts ."
   },
   "author": "Nevena Radovic",
   "license": "ISC",
@@ -19,6 +20,9 @@
   },
   "devDependencies": {
     "@types/express": "^4.17.14",
+    "@typescript-eslint/eslint-plugin": "^5.37.0",
+    "@typescript-eslint/parser": "^5.37.0",
+    "eslint": "^8.23.1",
     "ts-node-dev": "^2.0.0"
   }
 }
