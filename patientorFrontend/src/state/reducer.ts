@@ -45,16 +45,37 @@ export const reducer = (state: State, action: Action): State => {
           [action.payload.id]: action.payload,
         },
       };
-      case "SET_PATIENT":
-        return {
-          ...state,
-          patients: {
-            ...state.patients,
-            [action.payload.id]: action.payload,
-          },
-        };
+    case "SET_PATIENT":
+      return {
+        ...state,
+        patients: {
+          ...state.patients,
+          [action.payload.id]: action.payload,
+        },
+      };
     default:
       assertNever(action);
       return state;
   }
+};
+
+export const setPatientList = (patients: Patient[]): Action => {
+  return {
+    type: "SET_PATIENT_LIST",
+    payload: patients,
+  };
+};
+
+export const addPatient = (patient: Patient): Action => {
+  return {
+    type: "ADD_PATIENT",
+    payload: patient,
+  };
+};
+
+export const setPatient = (patient: Patient): Action => {
+  return {
+    type: "SET_PATIENT",
+    payload: patient,
+  };
 };
