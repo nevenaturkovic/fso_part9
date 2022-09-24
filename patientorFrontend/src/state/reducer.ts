@@ -1,6 +1,15 @@
 import { State } from "./state";
 import { Patient } from "../types";
 
+/**
+ * Helper function for exhaustive type checking
+ */
+const assertNever = (value: never): never => {
+  throw new Error(
+    `Unhandled discriminated union member: ${JSON.stringify(value)}`
+  );
+};
+
 export type Action =
   | {
       type: "SET_PATIENT_LIST";
@@ -8,6 +17,10 @@ export type Action =
     }
   | {
       type: "ADD_PATIENT";
+      payload: Patient;
+    }
+  | {
+      type: "SET_PATIENT";
       payload: Patient;
     };
 
@@ -21,18 +34,27 @@ export const reducer = (state: State, action: Action): State => {
             (memo, patient) => ({ ...memo, [patient.id]: patient }),
             {}
           ),
-          ...state.patients
-        }
+          ...state.patients,
+        },
       };
     case "ADD_PATIENT":
       return {
         ...state,
         patients: {
           ...state.patients,
-          [action.payload.id]: action.payload
-        }
+          [action.payload.id]: action.payload,
+        },
       };
+      case "SET_PATIENT":
+        return {
+          ...state,
+          patients: {
+            ...state.patients,
+            [action.payload.id]: action.payload,
+          },
+        };
     default:
+      assertNever(action);
       return state;
   }
 };
