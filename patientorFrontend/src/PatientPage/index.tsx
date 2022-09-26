@@ -33,7 +33,6 @@ const PatientPage = () => {
   }, [dispatch]);
 
   const patient = patients[id];
-
   if (patient) {
     return (
       <div className="App">
@@ -45,6 +44,23 @@ const PatientPage = () => {
           <br />
           occupation: {patient.occupation}
         </p>
+        <h3>entries</h3>
+        {patient.entries.map((entry) => (
+          <div key={entry.id}>
+            <p>
+              {entry.date} <em>{entry.description}</em>
+            </p>
+            {entry.diagnosisCodes ? (
+              <ul>
+                {entry.diagnosisCodes.map((code) => (
+                  <li key={code}>{code}</li>
+                ))}
+              </ul>
+            ) : (
+              ""
+            )}
+          </div>
+        ))}
       </div>
     );
   } else {
