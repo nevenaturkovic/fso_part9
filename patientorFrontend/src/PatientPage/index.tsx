@@ -3,12 +3,13 @@ import axios from "axios";
 
 import { useParams } from "react-router-dom";
 import { apiBaseUrl } from "../constants";
-import { setPatient, useStateValue } from "../state";
-import { Patient } from "../types";
+import { setDiagnoses, setPatient, useStateValue } from "../state";
+import { Patient, Diagnosis } from "../types";
+
 import GenderIcon from "../components/GenderIcon";
 
 const PatientPage = () => {
-  const [{ patients }, dispatch] = useStateValue();
+  const [{ patients, diagnoses }, dispatch] = useStateValue();
   const { id } = useParams<{ id: string }>();
 
   if (!id) {
@@ -30,8 +31,21 @@ const PatientPage = () => {
       }
     };
     void fetchPatient();
+
+    const fetchDiagnoses = async () => {
+      try {
+        const { data: diagnosesFromApi } = await axios.get<Diagnosis[]>(
+          `${apiBaseUrl}/diagnoses`
+        );
+        dispatch(setDiagnoses(diagnosesFromApi));
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    void fetchDiagnoses();
   }, [dispatch]);
 
+  //console.log(diagnoses["M24.2"].name);
   const patient = patients[id];
   if (patient) {
     return (
@@ -44,23 +58,28 @@ const PatientPage = () => {
           <br />
           occupation: {patient.occupation}
         </p>
-        <h3>entries</h3>
-        {patient.entries.map((entry) => (
-          <div key={entry.id}>
-            <p>
-              {entry.date} <em>{entry.description}</em>
-            </p>
-            {entry.diagnosisCodes ? (
-              <ul>
-                {entry.diagnosisCodes.map((code) => (
-                  <li key={code}>{code}</li>
-                ))}
-              </ul>
-            ) : (
-              ""
-            )}
-          </div>
-        ))}
+        {patient.entries.length > 0 && (
+          <>
+            <h3>entries</h3>
+            {patient.entries.map((entry) => (
+              <div key={entry.id}>
+                <p>
+                  {entry.date} <em>{entry.description}</em>
+                </p>
+                {entry.diagnosisCodes && (
+                  <ul>
+                    {entry.diagnosisCodes.map((code) => (
+                      <li key={code}>
+                        {code}{" "}
+                        {Object.keys(diagnoses).length > 0 && diagnoses[code].name}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ))}
+          </>
+        )}
       </div>
     );
   } else {
