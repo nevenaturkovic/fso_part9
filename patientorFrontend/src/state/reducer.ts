@@ -1,14 +1,6 @@
 import { State } from "./state";
 import { Patient, Diagnosis } from "../types";
-
-/**
- * Helper function for exhaustive type checking
- */
-const assertNever = (value: never): never => {
-  throw new Error(
-    `Unhandled discriminated union member: ${JSON.stringify(value)}`
-  );
-};
+import { assertNever } from "../utils";
 
 export type Action =
   | {
