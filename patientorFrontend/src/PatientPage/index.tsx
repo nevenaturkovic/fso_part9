@@ -45,7 +45,7 @@ const CommonEntryComponent = ({
     void fetchDiagnoses();
   }, [dispatch]);
   return (
-    <Card variant="outlined">
+    <Card variant="outlined" style={{marginBottom: "1em"}}>
       <div key={entry.id}>
         <p>
           {entry.date} {header} <br /> <em>{entry.description}</em>
