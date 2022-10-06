@@ -15,6 +15,8 @@ export enum Gender {
   Other = "other",
 }
 
+export type EntryType = "HealthCheck" | "Hospital" | "OccupationalHealthcare";
+
 export interface Patient {
   id: string;
   name: string;

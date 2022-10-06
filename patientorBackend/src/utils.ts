@@ -192,6 +192,7 @@ export const toNewEntry = (object: any): NewEntry => {
     specialist: parseSpecialist(object.specialist),
     type: parseType(object.type),
   };
+  console.log("object", object);
   if (object.diagnosisCodes) {
     baseEntry.diagnosisCodes = parseDiagnosisCodes(object.diagnosisCodes);
   }

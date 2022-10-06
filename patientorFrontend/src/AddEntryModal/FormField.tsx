@@ -7,13 +7,13 @@ import {
   TextField as TextFieldMUI,
   Typography,
 } from "@material-ui/core";
-import { Diagnosis, Gender } from "../types";
+import { Diagnosis, EntryType } from "../types";
 import { InputLabel } from "@material-ui/core";
-import Input from '@material-ui/core/Input';
+import Input from "@material-ui/core/Input";
 
 // structure of a single option
-export type GenderOption = {
-  value: Gender;
+export type EntryTypeOption = {
+  value: EntryType;
   label: string;
 };
 
@@ -21,10 +21,12 @@ export type GenderOption = {
 type SelectFieldProps = {
   name: string;
   label: string;
-  options: GenderOption[];
+  options: EntryTypeOption[];
 };
 
-const FormikSelect = ({ field, ...props }: FieldProps) => <Select {...field} {...props} />;
+const FormikSelect = ({ field, ...props }: FieldProps) => (
+  <Select {...field} {...props} />
+);
 
 export const SelectField = ({ name, label, options }: SelectFieldProps) => (
   <>
@@ -73,9 +75,7 @@ interface NumberProps extends FieldProps {
   max: number;
 }
 
-export const NumberField = ({ field, label, min, max }: NumberProps) => {
-  const [value, setValue] = useState<number>();
-
+export const NumberField = ({ field, form, label, min, max }: NumberProps) => {
   return (
     <div style={{ marginBottom: "1em" }}>
       <TextFieldMUI
@@ -84,14 +84,13 @@ export const NumberField = ({ field, label, min, max }: NumberProps) => {
         placeholder={String(min)}
         type="number"
         {...field}
-        value={value}
         onChange={(e) => {
           const value = parseInt(e.target.value);
           if (value === undefined) return;
-          if (value > max) setValue(max);
-          else if (value <= min) setValue(min);
-          else setValue(Math.floor(value));
-      }}
+          if (value > max) form.setFieldValue(field.name, max);
+          else if (value <= min) form.setFieldValue(field.name, min);
+          else form.setFieldValue(field.name, Math.floor(value));
+        }}
       />
       <Typography variant="subtitle2" style={{ color: "red" }}>
         <ErrorMessage name={field.name} />
@@ -111,7 +110,7 @@ export const DiagnosisSelection = ({
 }) => {
   const [selectedDiagnoses, setDiagnoses] = useState<string[]>([]);
   const field = "diagnosisCodes";
-  const onChange = (data: string[]) => {    
+  const onChange = (data: string[]) => {
     setDiagnoses([...data]);
     setFieldTouched(field, true);
     setFieldValue(field, selectedDiagnoses);
@@ -124,9 +123,14 @@ export const DiagnosisSelection = ({
   }));
 
   return (
-    <FormControl style={{ width: 552, marginBottom: '30px' }}>
+    <FormControl style={{ width: 552, marginBottom: "30px" }}>
       <InputLabel>Diagnoses</InputLabel>
-      <Select multiple value={selectedDiagnoses} onChange={(e) => onChange(e.target.value as string[])} input={<Input />}>
+      <Select
+        multiple
+        value={selectedDiagnoses}
+        onChange={(e) => onChange(e.target.value as string[])}
+        input={<Input />}
+      >
         {stateOptions.map((option) => (
           <MenuItem key={option.key} value={option.value}>
             {option.text}
